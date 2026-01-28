@@ -1,0 +1,37 @@
+export interface Project {
+  id: string;            
+  userId: string;         
+  title: string;          
+  imageUrl?: string;      
+  description: string;    
+  projectUrl?: string;    
+  createdAt: string;      
+}
+
+export interface AuthResponse {
+  token: string;
+  username: string;
+}
+
+export interface LoginRequest {
+  username: string; 
+  password: string; 
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  firstName: string;
+  lastName: string;
+  resumeUrl?: string; 
+  createdAt: string;
+}
+
+export interface ProjectUploadRequest {
+  title: string;
+  description: string;
+  projectUrl?: string; 
+  image: File;         
+}
