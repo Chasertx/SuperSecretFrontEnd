@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axiosInstance';
-import { ExternalLink, Github, Layers, Loader2 } from 'lucide-react';
+import { ExternalLink, Github, Loader2 } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -59,9 +59,12 @@ export default function ProjectsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => (
-            <div 
+            <a 
               key={project.id} 
-              className="group bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-2xl hover:shadow-blue-500/10"
+              href={project.githubUrl || '#'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-2xl hover:shadow-blue-500/10"
             >
               <div className="aspect-video w-full overflow-hidden bg-slate-700">
                 <img 
@@ -72,33 +75,47 @@ export default function ProjectsPage() {
               </div>
 
               <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                  {project.title}
+                </h3>
                 <p className="text-slate-400 text-sm mb-4 line-clamp-3">
                   {project.description}
                 </p>
 
-                <div className="flex items-center gap-4 pt-4 border-t border-slate-700">
-                  {project.githubUrl && (
-                    <a 
-                      href={project.githubUrl} 
-                      target="_blank" 
-                      className="text-slate-400 hover:text-white transition-colors"
+                {/* Safety check for technologies to prevent the .map() crash */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.technologies?.map((tech) => (
+                    <span 
+                      key={tech} 
+                      className="px-2.5 py-1 bg-slate-900 text-blue-400 text-xs font-semibold rounded-md border border-slate-700"
                     >
-                      <Github size={20} />
-                    </a>
-                  )}
-                  {project.liveUrl && (
-                    <a 
-                      href={project.liveUrl} 
-                      target="_blank" 
-                      className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1.5 text-sm font-bold uppercase"
-                    >
-                      Live Preview <ExternalLink size={16} />
-                    </a>
-                  )}
+                      {tech}
+                    </span>
+                  )) || <span className="text-slate-500 text-xs italic">No tags</span>}
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-slate-700">
+                  <div className="flex items-center gap-4">
+                    <Github className="text-slate-400 group-hover:text-white transition-colors" size={20} />
+                    
+                    {project.liveUrl && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault(); // Stop card link from firing
+                          window.open(project.liveUrl, '_blank');
+                        }}
+                        className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1.5 text-sm font-bold uppercase"
+                      >
+                        Live Preview <ExternalLink size={16} />
+                      </button>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-500 group-hover:text-blue-400/70 font-medium">
+                    View on GitHub →
+                  </span>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
