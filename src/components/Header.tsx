@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  LogIn, User, LogOut, Settings, Plus, Crown, 
-  Mail, Linkedin, Github, Instagram 
+  LogIn, User, LogOut, Plus, Crown, 
+  Info, Building2 
 } from 'lucide-react';
 import type { User as UserType } from '../types';
 
@@ -12,7 +12,6 @@ export default function Header() {
 
   const [user, setUser] = useState<UserType | null>(() => {
     const savedUser = localStorage.getItem('user');
-    console.log(savedUser);
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
@@ -36,61 +35,12 @@ export default function Header() {
     window.location.reload(); 
   };
 
-  // Helper to ensure links are valid URLs
-  const formatLink = (link: string | undefined, fallback: string) => link || fallback;
-
-  // Social Links Component using API data
-  const SocialLinks = () => (
-    <div className="flex items-center gap-4 mr-2 border-r border-slate-800 pr-4">
-      {/* Mail link using user email if available */}
-      <a 
-        href={`mailto:${user?.email || 'contact@example.com'}`} 
-        className="text-slate-400 hover:text-emerald-400 transition-colors" 
-        title="Contact"
-      >
-        <Mail size={20} />
-      </a>
-
-      {/* LinkedIn from API */}
-      <a 
-        href={formatLink(user?.linkedInLink, "https://linkedin.com")} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-slate-400 hover:text-blue-400 transition-colors" 
-        title="LinkedIn"
-      >
-        <Linkedin size={20} />
-      </a>
-
-      {/* GitHub from API */}
-      <a 
-        href={formatLink(user?.gitHubLink, "https://github.com")} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-slate-400 hover:text-white transition-colors" 
-        title="GitHub"
-      >
-        <Github size={20} />
-      </a>
-
-      {/* Instagram from API */}
-      <a 
-        href={formatLink(user?.instagramLink, "https://instagram.com")} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-slate-400 hover:text-pink-400 transition-colors" 
-        title="Instagram"
-      >
-        <Instagram size={20} />
-      </a>
-    </div>
-  );
-
   return (
     <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         
-        <div className="flex items-center gap-8">
+        {/* Left Side: Logo & Conditional Action */}
+        <div className="flex items-center gap-4">
           <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity">
             PortfolioPro
           </Link>
@@ -106,22 +56,40 @@ export default function Header() {
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        {/* Right Side: Navigation & Auth */}
+        <div className="flex items-center gap-2 md:gap-6">
           
-          <SocialLinks />
+          {/* New Navigation Links (Now on the Right) */}
+          <div className="hidden sm:flex items-center gap-4 border-r border-slate-800 pr-6 mr-2">
+            <Link 
+              to="/about" 
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-wider"
+            >
+              <Info size={16} className="text-blue-400" />
+              <span>About Me</span>
+            </Link>
+
+            <Link 
+              to="/companies" 
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-wider"
+            >
+              <Building2 size={16} className="text-emerald-400" />
+              <span>Companies</span>
+            </Link>
+          </div>
 
           {user?.role === 'King' && (
             <Link 
               to="/admin/edit-portfolio" 
-              className="hidden sm:flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500/50 rounded-lg text-amber-500 text-xs font-black uppercase tracking-tighter hover:bg-amber-500 hover:text-slate-900 transition-all shadow-lg shadow-amber-500/10"
+              className="hidden sm:flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500/50 rounded-lg text-amber-500 text-[10px] font-black uppercase tracking-tighter hover:bg-amber-500 hover:text-slate-900 transition-all shadow-lg shadow-amber-500/10"
             >
-              <Crown size={14} />
+              <Crown size={12} />
               <span>King Editor</span>
             </Link>
           )}
 
           {user ? (
-            <div className="flex items-center gap-3 md:gap-6 border-l border-slate-700 pl-4">
+            <div className="flex items-center gap-3 md:gap-4">
               <div className="flex items-center gap-2 text-slate-300">
                 <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 overflow-hidden">
                   {user.profileImageUrl ? (
@@ -130,22 +98,22 @@ export default function Header() {
                     <User size={16} className="text-blue-400" />
                   )}
                 </div>
-                <span className="hidden lg:inline text-sm font-semibold">{user.username}</span>
+                <span className="hidden lg:inline text-xs font-semibold">{user.username}</span>
               </div>
 
               <button 
                 onClick={handleLogout}
                 className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
               >
-                <LogOut size={20} />
+                <LogOut size={18} />
               </button>
             </div>
           ) : (
             <Link 
               to="/login" 
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full font-bold text-xs transition-all shadow-lg shadow-blue-600/20"
             >
-              <LogIn size={18} />
+              <LogIn size={16} />
               <span>Login</span>
             </Link>
           )}
