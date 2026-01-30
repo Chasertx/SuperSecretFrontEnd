@@ -21,6 +21,7 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const response = await api.get('/projects/my-projects');
+        console.log(response.data);
         setProjects(response.data);
       } catch (err: any) {
         setError('Failed to load projects. Please try again later.');
