@@ -73,7 +73,7 @@ export default function LandingPage() {
               <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
                 <button 
                   onClick={() => navigate('/projects')}
-                  className="bg-emerald-500 text-slate-900 px-8 py-4 rounded-xl font-black text-sm uppercase tracking-wider hover:bg-emerald-400 transition-all flex items-center gap-2 group shadow-xl shadow-emerald-500/20"
+                  className="bg-emerald-500 hover:cursor-pointer text-slate-900 px-8 py-4 rounded-xl font-black text-sm uppercase tracking-wider hover:bg-emerald-400 transition-all flex items-center gap-2 group shadow-xl shadow-emerald-500/20"
                 >
                   Explore Projects
                   <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
