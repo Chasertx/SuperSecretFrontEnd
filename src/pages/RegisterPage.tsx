@@ -11,7 +11,6 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Sending data to your Azure API
       await api.post('/auth/register', formData);
       alert('Registration successful! Please login.');
       navigate('/login');

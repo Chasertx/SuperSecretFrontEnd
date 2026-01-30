@@ -13,9 +13,6 @@ export default function UploadProjectPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!image) return alert("Please select an image");
-
-    // "What": We use FormData instead of a regular JSON object
-    // "Why": JSON cannot carry raw file data. FormData mimics a physical form submission
     const formData = new FormData();
     formData.append('Title', title);
     formData.append('Description', description);
@@ -24,7 +21,7 @@ export default function UploadProjectPage() {
 
     try {
       await api.post('/projects', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' } // Tells Azure to expect a file
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       navigate('/projects');
     } catch (err) {

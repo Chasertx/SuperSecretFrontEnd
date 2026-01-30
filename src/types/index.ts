@@ -19,14 +19,33 @@ export interface LoginRequest {
 }
 
 export interface User {
-  id: string;
+  id: string; 
   username: string;
   email: string;
   role: string;
-  firstName: string;
-  lastName: string;
-  resumeUrl?: string; 
-  createdAt: string;
+  firstName?: string; 
+  lastName?: string;
+
+  title?: string;
+  bio?: string;
+  yearsOfExperience: number;
+  profileImageUrl?: string;
+  resumeUrl?: string;
+
+
+  tagline1?: string;
+  tagline2?: string;
+  frontendSkills: string[]; 
+  backendSkills: string[];
+  databaseSkills: string[];
+
+
+  instagramLink?: string;
+  gitHubLink?: string;
+  linkedInLink?: string;
+
+  // Metadata
+  createdAt: string; 
 }
 
 export interface ProjectUploadRequest {

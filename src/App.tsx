@@ -6,19 +6,35 @@ import LoginPage from './pages/LoginPage';
 import ProjectsPage from './pages/ProjectsPage';
 import UploadProjectPage from './pages/UploadProjectPage';
 import EditProfilePage from './pages/EditProfilePage';
+import Footer from './components/Footer';
+import type { User } from './types';
+import EditPortfolioPage from './pages/EditProfilePage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
+
+  const savedUser = localStorage.getItem('user');
+  const user = savedUser ? JSON.parse(savedUser) : null;
+
   return (
     <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/projects/new" element={<UploadProjectPage />} />
-        <Route path="/profile/edit" element={<EditProfilePage />} />
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/projects/new" element={<UploadProjectPage />} />
+            <Route path="/profile/edit" element={<EditProfilePage />} />
+            <Route path="/admin/edit-portfolio" element={<ProtectedRoute requiredRole="King"><EditPortfolioPage /></ProtectedRoute>} />
+          </Routes>
+        </main>
+
+        <Footer user={user} />
+      </div>
     </Router>
   );
 }
