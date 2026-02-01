@@ -30,8 +30,8 @@ const Footer: React.FC<FooterProps> = ({ user }) => {
               <Github size={18} />
             </a>
           )}
-          {user?.linkedInLink && (
-            <a href={user.linkedInLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">
+          {user?.linkendInLink && (
+            <a href={user.linkendInLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">
               <Linkedin size={18} />
             </a>
           )}
@@ -44,6 +44,12 @@ const Footer: React.FC<FooterProps> = ({ user }) => {
             <Mail size={18} />
           </a>
         </div>
+
+        <div className="flex justify-center gap-10">
+             {user?.gitHubLink && <a href={user.gitHubLink} target="_blank" className="text-slate-500 hover:text-white transition-all transform hover:-translate-y-1"><Github size={24}/></a>}
+             {user?.linkendInLink && <a href={user.linkendInLink} target="_blank" className="text-slate-500 hover:text-emerald-500 transition-all transform hover:-translate-y-1"><Linkedin size={24}/></a>}
+             {user?.instagramLink && <a href={user.instagramLink} target="_blank" className="text-slate-500 hover:text-pink-500 transition-all transform hover:-translate-y-1"><Instagram size={24}/></a>}
+          </div>
 
         <div className="flex items-center gap-6 text-xs font-bold uppercase tracking-widest">
           <Link to="/contact" className="text-emerald-500 hover:text-emerald-400 transition-colors">

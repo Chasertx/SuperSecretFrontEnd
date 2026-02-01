@@ -43,16 +43,6 @@ export default function Header() {
           <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity">
             PortfolioPro
           </Link>
-
-          {isProjectsPage && user && (
-            <button 
-              onClick={() => navigate('/projects/new')}
-              className="hidden md:flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-4 py-1.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-emerald-500/10 active:scale-95"
-            >
-              <Plus size={18} />
-              <span>Add Project</span>
-            </button>
-          )}
         </div>
 
         {/* Right Side: Navigation & Auth */}

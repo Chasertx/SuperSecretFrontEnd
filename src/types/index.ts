@@ -42,7 +42,7 @@ export interface User {
 
   instagramLink?: string;
   gitHubLink?: string;
-  linkedInLink?: string;
+  linkendInLink?: string;
 
   // Metadata
   createdAt: string; 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axiosInstance';
+import { Link } from 'react-router-dom';
 import type { User } from '../types';
 import { 
   Github, 
@@ -17,15 +18,15 @@ import {
 export default function LandingPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchKingProfile = async () => {
       try {
         const response = await api.get('/users/profile/king');
+        console.log(response.data);
         setUser(response.data);
-      } catch (err) {
-        console.error("Failed to fetch King profile", err);
+      } catch (error) {
+        console.error("Error fetching contact data:", error);
       } finally {
         setLoading(false);
       }
@@ -71,13 +72,11 @@ export default function LandingPage() {
               </div>
 
               <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
-                <button 
-                  onClick={() => navigate('/projects')}
-                  className="bg-emerald-500 hover:cursor-pointer text-slate-900 px-8 py-4 rounded-xl font-black text-sm uppercase tracking-wider hover:bg-emerald-400 transition-all flex items-center gap-2 group shadow-xl shadow-emerald-500/20"
-                >
+                 <Link to="/projects" 
+                  className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-8 py-3 rounded-full font-bold transition-all shadow-lg shadow-emerald-500/20"
+                  >
                   Explore Projects
-                  <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </button>
+                  </Link>
                 {user?.resumeUrl && (
                   <a href={user.resumeUrl} target="_blank" className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-slate-800 transition-all border border-slate-800 flex items-center gap-2">
                     <FileText size={18} /> Resume
@@ -137,23 +136,6 @@ export default function LandingPage() {
               </div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      <section className="py-32 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mb-12 inline-block p-4 rounded-full bg-slate-900 border border-slate-800">
-             <Github size={32} className="text-slate-400" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 leading-tight">
-            {user?.bio || "Crafting robust backend architectures and seamless frontend experiences."}
-          </h2>
-          
-          <div className="flex justify-center gap-10">
-             {user?.gitHubLink && <a href={user.gitHubLink} target="_blank" className="text-slate-500 hover:text-white transition-all transform hover:-translate-y-1"><Github size={24}/></a>}
-             {user?.linkedInLink && <a href={user.linkedInLink} target="_blank" className="text-slate-500 hover:text-emerald-500 transition-all transform hover:-translate-y-1"><Linkedin size={24}/></a>}
-             {user?.instagramLink && <a href={user.instagramLink} target="_blank" className="text-slate-500 hover:text-pink-500 transition-all transform hover:-translate-y-1"><Instagram size={24}/></a>}
           </div>
         </div>
       </section>

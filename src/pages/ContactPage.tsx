@@ -11,6 +11,7 @@ const ContactPage: React.FC = () => {
     const fetchKingProfile = async () => {
       try {
         const response = await api.get('/users/profile/king');
+        console.log(response.data);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching contact data:", error);
@@ -70,9 +71,9 @@ const ContactPage: React.FC = () => {
               </a>
             )}
 
-            {user?.linkedInLink && (
+            
               <a 
-                href={user.linkedInLink} 
+                href={user?.linkendInLink} 
                 target="_blank" 
                 rel="noreferrer"
                 className="group flex flex-col items-center p-6 bg-slate-900/50 border border-slate-700/50 rounded-2xl hover:border-blue-500/20 transition-all"
@@ -81,7 +82,7 @@ const ContactPage: React.FC = () => {
                 <span className="text-xs font-bold uppercase tracking-widest text-slate-500">LinkedIn</span>
                 <ExternalLink size={12} className="mt-2 text-slate-700 group-hover:text-blue-500" />
               </a>
-            )}
+            
 
             {user?.instagramLink && (
               <a 
