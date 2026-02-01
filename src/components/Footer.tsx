@@ -1,67 +1,73 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Github, Linkedin, Instagram, Mail } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Github, Linkedin, Instagram, Mail, Code2 } from 'lucide-react';
+import api from '../api/axiosInstance';
 import type { User } from '../types';
 
-interface FooterProps {
-  user?: User | null;
-}
+const Footer: React.FC = () => {
+  const [king, setKing] = useState<User | null>(null);
 
-const Footer: React.FC<FooterProps> = ({ user }) => {
+  useEffect(() => {
+    const fetchKingData = async () => {
+      try {
+        const response = await api.get('/users/profile/king');
+        setKing(response.data);
+      } catch (error) {
+        console.error("Footer: Error fetching king data", error);
+      }
+    };
+    fetchKingData();
+  }, []);
+
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-900 border-t border-slate-800 py-6 px-8 mt-auto">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+    <footer className="bg-slate-900 border-t border-slate-800 py-4 px-6 mt-auto">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
+        {/* Left: Brand & Copyright */}
         <div className="flex items-center gap-4">
-          <span className="text-white font-black text-lg tracking-tighter">
-            PORTFOLIO<span className="text-emerald-500">PRO</span>
-          </span>
-          <span className="hidden md:block text-slate-600 text-xs">|</span>
-          <p className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">
-            © {currentYear} {user?.firstName} {user?.lastName}
+          <div className="flex items-center gap-2 border-r border-slate-800 pr-4">
+            <Code2 className="text-emerald-400" size={18} />
+            <span className="text-sm font-black tracking-tighter text-white">
+              Portfolio<span className="text-emerald-500">Pro</span>
+            </span>
+          </div>
+          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+            © {currentYear} {king?.firstName} {king?.lastName}
           </p>
         </div>
-      
-        <div className="flex items-center gap-3">
-          {user?.gitHubLink && (
-            <a href={user.gitHubLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-white transition-colors">
-              <Github size={18} />
-            </a>
-          )}
-          {user?.linkendInLink && (
-            <a href={user.linkendInLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-500 transition-colors">
-              <Linkedin size={18} />
-            </a>
-          )}
-          {user?.instagramLink && (
-            <a href={user.instagramLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-pink-500 transition-colors">
-              <Instagram size={18} />
-            </a>
-          )}
-          <a href={`mailto:${user?.email}`} className="text-slate-500 hover:text-emerald-400 transition-colors">
-            <Mail size={18} />
+
+        {/* Right: Socials & Contact */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            {king?.gitHubLink && (
+              <a href={king.gitHubLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-white transition-colors" title="GitHub">
+                <Github size={16} />
+              </a>
+            )}
+            {king?.linkendInLink && (
+              <a href={king.linkendInLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors" title="LinkedIn">
+                <Linkedin size={16} />
+              </a>
+            )}
+            {king?.instagramLink && (
+              <a href={king.instagramLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-pink-500 transition-colors" title="Instagram">
+                <Instagram size={16} />
+              </a>
+            )}
+          </div>
+
+          <div className="h-4 w-[1px] bg-slate-800 hidden md:block" />
+
+          <a 
+            href={`mailto:${king?.email}`}
+            className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-colors"
+          >
+            <Mail size={14} />
+            <span className="text-[10px] font-black uppercase tracking-tighter">{king?.email || 'Contact'}</span>
           </a>
         </div>
 
-        <div className="flex justify-center gap-10">
-             {user?.gitHubLink && <a href={user.gitHubLink} target="_blank" className="text-slate-500 hover:text-white transition-all transform hover:-translate-y-1"><Github size={24}/></a>}
-             {user?.linkendInLink && <a href={user.linkendInLink} target="_blank" className="text-slate-500 hover:text-emerald-500 transition-all transform hover:-translate-y-1"><Linkedin size={24}/></a>}
-             {user?.instagramLink && <a href={user.instagramLink} target="_blank" className="text-slate-500 hover:text-pink-500 transition-all transform hover:-translate-y-1"><Instagram size={24}/></a>}
-          </div>
-
-        <div className="flex items-center gap-6 text-xs font-bold uppercase tracking-widest">
-          <Link to="/contact" className="text-emerald-500 hover:text-emerald-400 transition-colors">
-            Contact
-          </Link>
-          <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-slate-500 hover:text-white transition-colors"
-          >
-            Back to top
-          </button>
-        </div>
       </div>
     </footer>
   );
