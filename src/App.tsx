@@ -10,6 +10,8 @@ import Footer from './components/Footer';
 import type { User } from './types';
 import EditPortfolioPage from './pages/EditProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
+import AboutPage from './pages/AboutMePage';
+import ContactPage from './pages/ContactPage';
 
 function App() {
 
@@ -29,7 +31,9 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/projects/new" element={<UploadProjectPage />} />
             <Route path="/profile/edit" element={<EditProfilePage />} />
-            <Route path="/admin/edit-portfolio" element={<ProtectedRoute requiredRole="King"><EditPortfolioPage /></ProtectedRoute>} />
+            <Route path="/admin/edit-portfolio" element={<EditPortfolioPage />}/>
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </main>
 

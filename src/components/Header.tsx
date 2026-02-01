@@ -11,14 +11,12 @@ export default function Header() {
 
   const [user, setUser] = useState<UserType | null>(() => {
     const savedUser = localStorage.getItem('user');
-    console.log(savedUser);
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
   useEffect(() => {
     const handleStorageUpdate = () => {
       const savedUser = localStorage.getItem('user');
-      console.log(savedUser);
       setUser(savedUser ? JSON.parse(savedUser) : null);
     };
 
@@ -60,7 +58,6 @@ export default function Header() {
         {/* Right Side: Navigation & Auth */}
         <div className="flex items-center gap-6">
           
-          {/* Main Navigation Links */}
           <div className="hidden sm:flex items-center gap-6 border-r border-slate-800 pr-6">
             <Link 
               to="/about" 
@@ -79,7 +76,7 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* King Editor Button - Visible only for 'King' role */}
+          {/* King Editor - Only visible if logged in user has 'King' role */}
           {user?.role === 'King' && (
             <Link 
               to="/admin/edit-portfolio" 
@@ -90,7 +87,6 @@ export default function Header() {
             </Link>
           )}
 
-          {/* User Profile / Login Section */}
           {user ? (
             <div className="flex items-center gap-3 md:gap-4 border-l border-slate-800 pl-6">
               <div className="flex items-center gap-2 text-slate-300">

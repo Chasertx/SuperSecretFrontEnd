@@ -7,7 +7,8 @@ interface Project {
   title: string;
   description: string;
   imageUrl: string;
-  githubUrl?: string;
+  projectUrl: string; // Ensure this matches your API response field
+  githubUrl?: string; 
   liveUrl?: string;
   technologies: string[];
 }
@@ -21,7 +22,6 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const response = await api.get('/projects/my-projects');
-        console.log(response.data);
         setProjects(response.data);
       } catch (err: any) {
         setError('Failed to load projects. Please try again later.');
@@ -62,7 +62,8 @@ export default function ProjectsPage() {
           {projects.map((project) => (
             <a 
               key={project.id} 
-              href={project.githubUrl || '#'} 
+              // Card now links to projectUrl
+              href={project.projectUrl || project.githubUrl || '#'} 
               target="_blank" 
               rel="noopener noreferrer"
               className="group block bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-2xl hover:shadow-blue-500/10"
@@ -83,7 +84,6 @@ export default function ProjectsPage() {
                   {project.description}
                 </p>
 
-                {/* Safety check for technologies to prevent the .map() crash */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.technologies?.map((tech) => (
                     <span 
@@ -102,7 +102,8 @@ export default function ProjectsPage() {
                     {project.liveUrl && (
                       <button
                         onClick={(e) => {
-                          e.preventDefault(); // Stop card link from firing
+                          e.preventDefault(); 
+                          e.stopPropagation(); // Prevents the card's <a> tag from firing
                           window.open(project.liveUrl, '_blank');
                         }}
                         className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1.5 text-sm font-bold uppercase"
@@ -111,6 +112,8 @@ export default function ProjectsPage() {
                       </button>
                     )}
                   </div>
+                  
+                  {/* Text confirms it goes to GitHub (the projectUrl) */}
                   <span className="text-xs text-slate-500 group-hover:text-blue-400/70 font-medium">
                     View on GitHub →
                   </span>
