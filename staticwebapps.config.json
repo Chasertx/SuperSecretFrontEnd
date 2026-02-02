@@ -1,0 +1,10 @@
+{
+  "mimeTypes": {
+    ".js": "application/javascript",
+    ".mjs": "application/javascript",
+    ".json": "application/json"
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html"
+  }
+}

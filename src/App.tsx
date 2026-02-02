@@ -37,7 +37,7 @@ function App() {
           </Routes>
         </main>
 
-        <Footer user={user} />
+        <Footer/>
       </div>
     </Router>
   );
