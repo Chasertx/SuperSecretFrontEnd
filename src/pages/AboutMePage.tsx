@@ -13,13 +13,13 @@ const AboutPage: React.FC = () => {
         const response = await api.get('/users/profile/king');
         setUser(response.data);
       } catch (error) {
-        console.error("Error loading About Me data:", error);
+        console.error("Error loading About Me data:", error );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchKingProfile();
+     fetchKingProfile();
   }, []);
 
   if (loading) {
