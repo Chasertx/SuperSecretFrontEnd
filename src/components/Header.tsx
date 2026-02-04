@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { 
-  LogIn, User, LogOut, Plus, Crown, Info, Mail 
+  LogIn, User, LogOut, Crown, Info, Mail, Edit3 
 } from 'lucide-react';
 import type { User as UserType } from '../types';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  
+  // Detect if a project is selected from the URL
+  const selectedProjectId = searchParams.get('edit');
 
   const [user, setUser] = useState<UserType | null>(() => {
     const savedUser = localStorage.getItem('user');
@@ -38,35 +42,42 @@ export default function Header() {
     <nav className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         
-        {/* Left Side: Logo and Conditional Action */}
-        <div className="flex items-center gap-4">
+        {/* Left Side: Logo and Action Button */}
+        <div className="flex items-center gap-6">
           <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity">
             PortfolioPro
           </Link>
+
+          {/* Conditional Edit Projects Button - Enhanced with Selection Logic */}
+          {user?.role === 'King' && isProjectsPage && (
+            <button 
+              disabled={!selectedProjectId}
+              onClick={() => navigate(`/admin/edit-project/${selectedProjectId}`)}
+              className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300
+                ${selectedProjectId 
+                  ? 'bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/40 scale-105 active:scale-95 cursor-pointer' 
+                  : 'bg-slate-800 border-slate-700 text-slate-500 cursor-not-allowed opacity-50'}`}
+            >
+              <Edit3 size={14} className={selectedProjectId ? 'animate-pulse' : ''} />
+              <span>{selectedProjectId ? 'Confirm Edit' : 'Select Project to Edit'}</span>
+            </button>
+          )}
         </div>
 
         {/* Right Side: Navigation & Auth */}
         <div className="flex items-center gap-6">
-          
           <div className="hidden sm:flex items-center gap-6 border-r border-slate-800 pr-6">
-            <Link 
-              to="/about" 
-              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
-            >
-              <Info size={16} className="text-blue-400" />
+            <Link to="/about" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
+              <span className="text-blue-400"><Info size={16} /></span>
               <span>About Me</span>
             </Link>
             
-            <Link 
-              to="/contact" 
-              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
-            >
-              <Mail size={16} className="text-emerald-400" />
+            <Link to="/contact" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
+              <span className="text-emerald-400"><Mail size={16} /></span>
               <span>Contact</span>
             </Link>
           </div>
 
-          {/* King Editor - Only visible if logged in user has 'King' role */}
           {user?.role === 'King' && (
             <Link 
               to="/admin/edit-portfolio" 
@@ -89,19 +100,12 @@ export default function Header() {
                 </div>
                 <span className="hidden lg:inline text-xs font-semibold">{user.username}</span>
               </div>
-
-              <button 
-                onClick={handleLogout}
-                className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
-              >
+              <button onClick={handleLogout} className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all">
                 <LogOut size={18} />
               </button>
             </div>
           ) : (
-            <Link 
-              to="/login" 
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full font-bold text-xs transition-all shadow-lg shadow-blue-600/20"
-            >
+            <Link to="/login" className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full font-bold text-xs transition-all shadow-lg shadow-blue-600/20">
               <LogIn size={16} />
               <span>Login</span>
             </Link>

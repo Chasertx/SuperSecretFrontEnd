@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../api/axiosInstance';
-import { ExternalLink, Github, Loader2 } from 'lucide-react';
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  projectUrl: string; // Ensure this matches your API response field
-  githubUrl?: string; 
-  liveUrl?: string;
-  technologies: string[];
-}
+import { ExternalLink, Github, Loader2, Globe, CheckCircle2 } from 'lucide-react';
+import type { Project } from '../types';
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // URL State for selection
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedId = searchParams.get('edit');
+
+  // Check user role from localStorage
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isKing = user.role === 'King';
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -31,6 +30,17 @@ export default function ProjectsPage() {
     };
     fetchProjects();
   }, []);
+
+  const handleSelect = (id: string) => {
+    if (!isKing) return;
+    const newParams = new URLSearchParams(searchParams);
+    if (selectedId === id) {
+      newParams.delete('edit');
+    } else {
+      newParams.set('edit', id);
+    }
+    setSearchParams(newParams);
+  };
 
   if (loading) {
     return (
@@ -59,68 +69,68 @@ export default function ProjectsPage() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
-            <a 
-              key={project.id} 
-              // Card now links to projectUrl
-              href={project.projectUrl || project.githubUrl || '#'} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group block bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-2xl hover:shadow-blue-500/10"
-            >
-              <div className="aspect-video w-full overflow-hidden bg-slate-700">
-                <img 
-                  src={project.imageUrl || 'https://via.placeholder.com/600x400'} 
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+          {projects.map((project) => {
+            const isSelected = selectedId === project.id;
+            return (
+              <div 
+                key={project.id} 
+                onClick={() => handleSelect(project.id)}
+                className={`group relative flex flex-col bg-slate-800 border rounded-2xl overflow-hidden transition-all duration-300 
+                  ${isKing ? 'cursor-pointer' : 'cursor-default'}
+                  ${isSelected 
+                    ? 'border-blue-500 ring-2 ring-blue-500/50 translate-y-[-4px] shadow-2xl shadow-blue-500/20' 
+                    : 'border-slate-700 hover:border-slate-500'}`}
+              >
+                {/* Selection Indicator Overlay */}
+                {isSelected && (
+                  <div className="absolute top-3 right-3 z-20 bg-blue-500 text-white rounded-full p-1 shadow-xl animate-in zoom-in">
+                    <CheckCircle2 size={20} />
+                  </div>
+                )}
 
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-slate-400 text-sm mb-4 line-clamp-3">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.technologies?.map((tech) => (
-                    <span 
-                      key={tech} 
-                      className="px-2.5 py-1 bg-slate-900 text-blue-400 text-xs font-semibold rounded-md border border-slate-700"
-                    >
-                      {tech}
-                    </span>
-                  )) || <span className="text-slate-500 text-xs italic">No tags</span>}
+                <div className="aspect-video w-full overflow-hidden bg-slate-700">
+                  <img 
+                    src={project.imageUrl || 'https://via.placeholder.com/600x400'} 
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-slate-700">
-                  <div className="flex items-center gap-4">
-                    <Github className="text-slate-400 group-hover:text-white transition-colors" size={20} />
-                    
-                    {project.liveUrl && (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault(); 
-                          e.stopPropagation(); // Prevents the card's <a> tag from firing
-                          window.open(project.liveUrl, '_blank');
-                        }}
-                        className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1.5 text-sm font-bold uppercase"
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className={`text-xl font-bold mb-2 transition-colors ${isSelected ? 'text-blue-400' : 'text-white'}`}>
+                    {project.title}
+                  </h3>
+                  <p className="text-slate-400 text-sm mb-4 line-clamp-3">
+                    {project.description}
+                  </p>
+
+                  <div className="mt-auto pt-4 border-t border-slate-700 flex items-center justify-between">
+                    <a
+                      href={project.projectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()} // Prevents selection when clicking link
+                      className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors"
+                    >
+                      <Github size={18} /> Code
+                    </a>
+
+                    {project.liveDemoURL && (
+                      <a
+                        href={project.liveDemoURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()} // Prevents selection when clicking link
+                        className="flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-wider"
                       >
-                        Live Preview <ExternalLink size={16} />
-                      </button>
+                        <Globe size={18} /> Live Demo <ExternalLink size={14} />
+                      </a>
                     )}
                   </div>
-                  
-                  {/* Text confirms it goes to GitHub (the projectUrl) */}
-                  <span className="text-xs text-slate-500 group-hover:text-blue-400/70 font-medium">
-                    View on GitHub →
-                  </span>
                 </div>
               </div>
-            </a>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

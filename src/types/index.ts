@@ -4,7 +4,8 @@ export interface Project {
   title: string;          
   imageUrl?: string;      
   description: string;    
-  projectUrl?: string;    
+  projectUrl?: string;  
+  liveDemoURL?: string;  
   createdAt: string;      
 }
 

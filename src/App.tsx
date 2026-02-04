@@ -12,6 +12,7 @@ import EditPortfolioPage from './pages/EditProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AboutPage from './pages/AboutMePage';
 import ContactPage from './pages/ContactPage';
+import EditProjectPage from './pages/EditProjects';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
             <Route path="/admin/edit-portfolio" element={<EditPortfolioPage />}/>
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin/edit-project/:id" element={<EditProjectPage />} />
           </Routes>
         </main>
 
